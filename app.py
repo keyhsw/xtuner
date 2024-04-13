@@ -35,11 +35,11 @@ logger = logging.get_logger(__name__)
 @dataclass
 class GenerationConfig:
     # this config is used for chat to provide more diversity
-    max_length: int = 32768
-    top_p: float = 0.8
-    temperature: float = 0.8
+    max_length: int = 2048
+    top_p: float = 0.75
+    temperature: float = 0.1
     do_sample: bool = True
-    repetition_penalty: float = 1.005
+    repetition_penalty: float = 1.000
 
 
 @torch.inference_mode()
@@ -180,10 +180,10 @@ def on_btn_click():
 
 @st.cache_resource
 def load_model():
-    model = (AutoModelForCausalLM.from_pretrained('/root/personal_assistant/config/work_dirs/hf_merge',
+    model = (AutoModelForCausalLM.from_pretrained('~/xtuner',
                                                   trust_remote_code=True).to(
                                                       torch.bfloat16).cuda())
-    tokenizer = AutoTokenizer.from_pretrained('/root/personal_assistant/config/work_dirs/hf_merge',
+    tokenizer = AutoTokenizer.from_pretrained('~/xtuner',
                                               trust_remote_code=True)
     return model, tokenizer
 
@@ -193,9 +193,9 @@ def prepare_generation_config():
         max_length = st.slider('Max Length',
                                min_value=8,
                                max_value=32768,
-                               value=32768)
-        top_p = st.slider('Top P', 0.0, 1.0, 0.8, step=0.01)
-        temperature = st.slider('Temperature', 0.0, 1.0, 0.7, step=0.01)
+                               value=2048)
+        top_p = st.slider('Top P', 0.0, 1.0, 0.75, step=0.01)
+        temperature = st.slider('Temperature', 0.0, 1.0, 0.1, step=0.01)
         st.button('Clear Chat History', on_click=on_btn_click)
 
     generation_config = GenerationConfig(max_length=max_length,
@@ -213,9 +213,7 @@ cur_query_prompt = '<|im_start|>user\n{user}<|im_end|>\n\
 
 def combine_history(prompt):
     messages = st.session_state.messages
-    meta_instruction = ('You are InternLM (书生·浦语), a helpful, honest, '
-                        'and harmless AI assistant developed by Shanghai '
-                        'AI Laboratory (上海人工智能实验室).')
+    meta_instruction = ('')
     total_prompt = f"<s><|im_start|>system\n{meta_instruction}<|im_end|>\n"
     for message in messages:
         cur_content = message['content']
@@ -236,10 +234,8 @@ def main():
     model, tokenizer = load_model()
     print('load model end.')
 
-    user_avator = '/assets/user.png'
-    robot_avator = '/assets/robot.png'
 
-    st.title('InternLM2-Chat-7B')
+    st.title('InternLM2-Chat-1.8B')
 
     generation_config = prepare_generation_config()
 
@@ -255,17 +251,16 @@ def main():
     # Accept user input
     if prompt := st.chat_input('What is up?'):
         # Display user message in chat message container
-        with st.chat_message('user', avatar=user_avator):
+        with st.chat_message('user'):
             st.markdown(prompt)
         real_prompt = combine_history(prompt)
         # Add user message to chat history
         st.session_state.messages.append({
             'role': 'user',
             'content': prompt,
-            'avatar': user_avator
         })
 
-        with st.chat_message('robot', avatar=robot_avator):
+        with st.chat_message('robot'):
             message_placeholder = st.empty()
             for cur_response in generate_interactive(
                     model=model,
@@ -281,7 +276,6 @@ def main():
         st.session_state.messages.append({
             'role': 'robot',
             'content': cur_response,  # pylint: disable=undefined-loop-variable
-            'avatar': robot_avator,
         })
         torch.cuda.empty_cache()
 
