@@ -186,7 +186,7 @@ def on_btn_click():
 #def load_model():
     # model = (AutoModelForCausalLM.from_pretrained('LiyanJin/xtuner',
 #                                                  trust_remote_code=True).to(
-                                                      torch.bfloat16).cuda())
+#                                                      torch.bfloat16).cuda())
     # tokenizer = AutoTokenizer.from_pretrained('LiyanJin/xtuner',
 #                                              trust_remote_code=True)
 
