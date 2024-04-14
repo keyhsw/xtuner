@@ -7,8 +7,8 @@ Please refer to these links below for more information:
     3. transformers: https://github.com/huggingface/transformers
 """
 
-from dataclasses import asdict
 
+from dataclasses import asdict, dataclass
 import json
 import streamlit as st
 import torch
