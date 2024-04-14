@@ -184,14 +184,13 @@ def on_btn_click():
 
 @st.cache_resource
 def load_model(model_dir):
-    model = (AutoModelForCausalLM.from_pretrained(model_dir,
-                                                  trust_remote_code=True).to(
-                                                      torch.bfloat16).cuda())
-    tokenizer = AutoTokenizer.from_pretrained(model_dir,
-                                              trust_remote_code=True)
-
+    model = (
+        AutoModelForCausalLM.from_pretrained(model_dir, trust_remote_code=True)
+        .to(torch.bfloat16)
+        .cuda()
+    )
+    tokenizer = AutoTokenizer.from_pretrained(model_dir, trust_remote_code=True)
     return model, tokenizer
-
 
 def prepare_generation_config():
     with st.sidebar:
