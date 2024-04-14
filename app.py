@@ -28,6 +28,10 @@ from transformers.generation.utils import (LogitsProcessorList,
 from transformers.utils import logging
 
 from transformers import AutoTokenizer, AutoModelForCausalLM  # isort: skip
+from transformers import pipeline
+from openxlab.model import download
+
+download(model_repo='LiyanJin/xtuner', output='LiyanJin')
 
 logger = logging.get_logger(__name__)
 
@@ -179,13 +183,14 @@ def on_btn_click():
 
 
 @st.cache_resource
-def load_model():
-    model = (AutoModelForCausalLM.from_pretrained('LiyanJin/xtuner',
-                                                  trust_remote_code=True).to(
+#def load_model():
+    # model = (AutoModelForCausalLM.from_pretrained('LiyanJin/xtuner',
+#                                                  trust_remote_code=True).to(
                                                       torch.bfloat16).cuda())
-    tokenizer = AutoTokenizer.from_pretrained('LiyanJin/xtuner',
-                                              trust_remote_code=True)
-    return model, tokenizer
+    # tokenizer = AutoTokenizer.from_pretrained('LiyanJin/xtuner',
+#                                              trust_remote_code=True)
+
+ #   return model, tokenizer
 
 
 def prepare_generation_config():
@@ -231,11 +236,11 @@ def combine_history(prompt):
 def main():
     # torch.cuda.empty_cache()
     print('load model begin.')
-    model, tokenizer = load_model()
+    model, tokenizer = load_model('LiyanJin')
     print('load model end.')
 
 
-    st.title('InternLM2-Chat-1.8B')
+    st.title('InternLM2-Chat-test-xtuner')
 
     generation_config = prepare_generation_config()
 
