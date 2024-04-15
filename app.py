@@ -240,7 +240,7 @@ def main():
     os.system(f'git clone https://code.openxlab.org.cn/LiyanJin/xtuner.git {model_dir}')
     os.system(f'cd {model_dir} && git lfs pull')
     
-    model, tokenizer = load_model()
+    model, tokenizer = load_model(model_dir)
     print('load model end.')
 
 
