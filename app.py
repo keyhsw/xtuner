@@ -4,7 +4,7 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, AutoModel
 from openxlab.model import download
 
-base_path = './jin-xtuner2'
+base_path = './jinxtuner2'
 os.system(f'git clone https://code.openxlab.org.cn/LiyanJin/xtuner.git {base_path}')
 os.system(f'cd {base_path} && git lfs pull')
 
