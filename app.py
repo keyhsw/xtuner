@@ -2,7 +2,6 @@ import gradio as gr
 import os
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, AutoModel
-from openxlab.model import download
 
 base_path = './xtuner'
 os.system(f'git clone https://code.openxlab.org.cn/LiyanJin/xtuner.git {base_path}')
